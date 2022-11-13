@@ -14,6 +14,8 @@ hundred.addEventListener('click', ()=> competitors = 100);
 // search list selectors
 const searchBox = document.querySelector('.searchbox');
 const searchButton = document.querySelector('.searchbutton');
+const list = document.querySelector('.list');
+const viewlist = document.querySelector('.viewlist');
 
 // auth
 const CLIENT_ID = '379e6d47191c45c29ad700947d53d268';
@@ -28,6 +30,7 @@ const authParameters = {
   },
   body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
 }
+
 const next = document.querySelector('.continue')
 next.addEventListener('click', ()=>{
   fetch('https://accounts.spotify.com/api/token', authParameters)
@@ -38,6 +41,8 @@ next.addEventListener('click', ()=>{
   })
 })
 
+
+// controls
 searchBox.addEventListener('keypress', (e)=> {
   if (e.key === 'Enter') {
     search();
@@ -46,6 +51,7 @@ searchBox.addEventListener('keypress', (e)=> {
 searchButton.addEventListener('click', ()=> {
   search();
 })
+let albumsList = [];
 async function search() {
   const searchInput = searchBox.value;
   // get req using search to get artist ID
@@ -62,7 +68,21 @@ async function search() {
   // get req with artist ID to get albums from artist
   const albums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums' + '?include_groups=album&market=US&limit=50', searchParameters)
   .then(res => res.json())
-  .then(data => searchedAlbums.push(data.items))
+  .then(data => { return data.items })
   // display albums to list
-  console.log(searchedAlbums)
+  // FIX ALBUMSLIST.PUSH
+  console.log(albums);
+  albums.map((album)=> {
+    const listItem = document.createElement('div');
+    listItem.classList.add('listitem');
+    listItem.innerHTML = `
+    <img src=${album.images[0].url}>
+    <h1>${album.name}</h1>
+    <h3>${album.release_date}</h3>
+    <h4><a href=${album.external_urls.spotify}>Spotify Link</a></h4>
+    <button onclick="${albumsList.push(album.id)}">+</button>`
+    list.appendChild(listItem);
+  })
 }
+
+viewlist.addEventListener('click', ()=> console.log(albumsList));
