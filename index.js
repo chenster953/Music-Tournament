@@ -72,7 +72,8 @@ async function search() {
   // display albums to list
   // FIX ALBUMSLIST.PUSH
   console.log(albums);
-  albums.map((album)=> {
+
+  albums.forEach((album)=> {
     const listItem = document.createElement('div');
     listItem.classList.add('listitem');
     listItem.innerHTML = `
@@ -80,9 +81,12 @@ async function search() {
     <h1>${album.name}</h1>
     <h3>${album.release_date}</h3>
     <h4><a href=${album.external_urls.spotify}>Spotify Link</a></h4>
-    <button onclick="${albumsList.push(album.id)}">+</button>`
+    <button class=${album.id}>+</button>`
     list.appendChild(listItem);
+    const buttons = document.querySelector('.listitem > button');
+    buttons.addEventListener('click', ()=> {
+      console.log('clicked')
+    })
   })
-}
-
+};
 viewlist.addEventListener('click', ()=> console.log(albumsList));
