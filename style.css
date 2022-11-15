@@ -27,3 +27,31 @@
 .list img {
   width: 20rem;
 }
+
+.savedlist {
+  width: 90%;
+  height: 3rem;
+  font-size: 30px;
+}
+
+#matchup-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.matchups {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.matchups div {
+  background-color: aliceblue;
+  width: 20rem;
+  height: 25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
