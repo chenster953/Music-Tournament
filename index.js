@@ -71,7 +71,7 @@ searchBox.addEventListener('keypress', (e)=> {
 searchButton.addEventListener('click', ()=> {
   search();
 })
-const savedAlbums = [];
+let savedAlbums = [];
 let albumsList = [];
 let savedCount = 0;
 async function search() {
@@ -121,6 +121,7 @@ viewlist.addEventListener('click', ()=> console.log(albumsList));
 const left = document.querySelector('.left');
 const right = document.querySelector('.right');
 const next = document.querySelector('.continue');
+
 let i = 0;
 
 next.addEventListener('click', async ()=> {
@@ -138,20 +139,57 @@ next.addEventListener('click', async ()=> {
           image: data.images[0].url,
           name: data.name,
           date: data.release_date,
-          tracks: data.total_tracks
+          tracks: data.total_tracks,
+          artist: data.artists[0].name,
+          link: data.external_urls.spotify
         });
       });
   };
-  left.innerHTML = `
-  <img src="${savedAlbums[i].image}"/>
-  <h1>${savedAlbums[i].name}</h1>
-  <h3>${savedAlbums[i].date}</h3>
-  <h4>Total Tracks: ${savedAlbums[i].tracks}</h4>
-  `
-  right.innerHTML = `
-  <img src="${savedAlbums[i+1].image}"/>
-  <h1>${savedAlbums[i+1].name}</h1>
-  <h3>${savedAlbums[i+1].date}</h3>
-  <h4>Total Tracks: ${savedAlbums[i+1].tracks}</h4>
-  `
+  renderMatchups();
 });
+
+left.addEventListener('click', ()=> {
+  savedAlbums.splice(1,1);
+  renderMatchups();
+})
+right.addEventListener('click', ()=> {
+  savedAlbums.splice(0,1);
+  renderMatchups();
+})
+
+function renderMatchups () {
+  if (savedAlbums.length <= 1) {
+    const winnerAlbum = document.querySelector('.winneralbum');
+    const winnerTitle = document.querySelector('.winnertitle');
+    const winnerArtist = document.querySelector('.winnerartist');
+    const winnerLink = document.querySelector('.winnerlink');
+    winnerAlbum.innerHTML = `<img src="${savedAlbums[0].image}"/>`;
+    winnerTitle.innerHTML = savedAlbums[0].name;
+    winnerArtist.innerHTML = savedAlbums[0].artist;
+    winnerLink.innerHTML = `<h4><a href=${savedAlbums[0].link}>Spotify Link</a></h4>`;
+    console.log(savedAlbums[0].image)
+    console.log(savedAlbums[0])
+  } else {
+    left.innerHTML = `
+    <img src="${savedAlbums[0].image}"/>
+    <h1>${savedAlbums[0].name}</h1>
+    <h3>${savedAlbums[0].date}</h3>
+    <h4>Total Tracks: ${savedAlbums[0].tracks}</h4>
+    `
+    right.innerHTML = `
+    <img src="${savedAlbums[1].image}"/>
+    <h1>${savedAlbums[1].name}</h1>
+    <h3>${savedAlbums[1].date}</h3>
+    <h4>Total Tracks: ${savedAlbums[1].tracks}</h4>
+    `
+  }
+}
+
+const test1 = document.querySelector('.test');
+test1.addEventListener('click', ()=> {
+  console.log(savedAlbums)
+})
+
+// SHUFFLE SAVED ALBUMS ARRAY
+// STYLE & ADD ANCHORTAGS & REQUIRED FIELDS
+// SPOTIFY LINKS OPEN NEW WINDOW
