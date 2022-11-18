@@ -30,7 +30,6 @@ ten.addEventListener('click', ()=> {
   .then(res => res.json())
   .then(data => {
     accessToken = data.access_token;
-    console.log(accessToken)
   })
   competitors = 10;
 });
@@ -39,7 +38,6 @@ twenty.addEventListener('click', ()=> {
   .then(res => res.json())
   .then(data => {
     accessToken = data.access_token;
-    console.log(accessToken)
   })
   competitors = 20;
 });
@@ -47,8 +45,6 @@ fifty.addEventListener('click', ()=> {
   fetch('https://accounts.spotify.com/api/token', authParameters)
   .then(res => res.json())
   .then(data => {
-    accessToken = data.access_token;
-    console.log(accessToken)
   })
   competitors = 50;
 });
@@ -57,7 +53,6 @@ hundred.addEventListener('click', ()=> {
   .then(res => res.json())
   .then(data => {
     accessToken = data.access_token;
-    console.log(accessToken)
   })
   competitors = 100;
 });
@@ -72,6 +67,7 @@ searchButton.addEventListener('click', ()=> {
   search();
 })
 let savedAlbums = [];
+let newSavedAlbums;
 let albumsList = [];
 let savedCount = 0;
 async function search() {
@@ -92,7 +88,6 @@ async function search() {
   .then(res => res.json())
   .then(data => { return data.items })
   // display albums to list
-  console.log(albums);
   list.innerHTML = ''
   albums.forEach((album)=> {
     const listItem = document.createElement('div');
@@ -145,15 +140,27 @@ next.addEventListener('click', async ()=> {
         });
       });
   };
+  // SHUFFLE SAVED ALBUMS ARRAY
+  let shuffle = function(arr) {
+    let newPos, temp;
+    for (let i = arr.length - 1; i > 0; i--) {
+      newPos = Math.floor(Math.random() * (i + 1));
+      temp = arr[i];
+      arr[i] = arr[newPos];
+      arr[newPos] = temp;
+    }
+    return savedAlbums;
+  };
+  newSavedAlbums = shuffle(savedAlbums);
   renderMatchups();
 });
 
 left.addEventListener('click', ()=> {
-  savedAlbums.splice(1,1);
+  newSavedAlbums.splice(1,1);
   renderMatchups();
 })
 right.addEventListener('click', ()=> {
-  savedAlbums.splice(0,1);
+  newSavedAlbums.splice(0,1);
   renderMatchups();
 })
 
@@ -163,33 +170,34 @@ function renderMatchups () {
     const winnerTitle = document.querySelector('.winnertitle');
     const winnerArtist = document.querySelector('.winnerartist');
     const winnerLink = document.querySelector('.winnerlink');
-    winnerAlbum.innerHTML = `<img src="${savedAlbums[0].image}"/>`;
-    winnerTitle.innerHTML = savedAlbums[0].name;
-    winnerArtist.innerHTML = savedAlbums[0].artist;
-    winnerLink.innerHTML = `<h4><a href=${savedAlbums[0].link}>Spotify Link</a></h4>`;
-    console.log(savedAlbums[0].image)
-    console.log(savedAlbums[0])
+    winnerAlbum.innerHTML = `<img src="${newSavedAlbums[0].image}"/>`;
+    winnerTitle.innerHTML = newSavedAlbums[0].name;
+    winnerArtist.innerHTML = newSavedAlbums[0].artist;
+    winnerLink.innerHTML = `<h4><a href=${newSavedAlbums[0].link}>Spotify Link</a></h4>`;
   } else {
     left.innerHTML = `
-    <img src="${savedAlbums[0].image}"/>
-    <h1>${savedAlbums[0].name}</h1>
-    <h3>${savedAlbums[0].date}</h3>
-    <h4>Total Tracks: ${savedAlbums[0].tracks}</h4>
+    <img src="${newSavedAlbums[0].image}"/>
+    <h1>${newSavedAlbums[0].name}</h1>
+    <h3>${newSavedAlbums[0].date}</h3>
+    <h4>Total Tracks: ${newSavedAlbums[0].tracks}</h4>
     `
     right.innerHTML = `
-    <img src="${savedAlbums[1].image}"/>
-    <h1>${savedAlbums[1].name}</h1>
-    <h3>${savedAlbums[1].date}</h3>
-    <h4>Total Tracks: ${savedAlbums[1].tracks}</h4>
+    <img src="${newSavedAlbums[1].image}"/>
+    <h1>${newSavedAlbums[1].name}</h1>
+    <h3>${newSavedAlbums[1].date}</h3>
+    <h4>Total Tracks: ${newSavedAlbums[1].tracks}</h4>
     `
   }
 }
 
+
 const test1 = document.querySelector('.test');
 test1.addEventListener('click', ()=> {
-  console.log(savedAlbums)
+  console.log(savedAlbums);
+  setTimeout(() => {
+    console.log(newSavedAlbums);
+  }, 1000);
 })
 
-// SHUFFLE SAVED ALBUMS ARRAY
 // STYLE & ADD ANCHORTAGS & REQUIRED FIELDS
 // SPOTIFY LINKS OPEN NEW WINDOW
